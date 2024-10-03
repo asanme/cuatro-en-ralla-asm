@@ -168,16 +168,26 @@ getch endp
 ; colScreen : columna on volem posicionar el cursor a la pantalla.
 ; rowScreenIni : fila de la primera posició de la matriu a la pantalla.
 ; colScreenIni : columna de la primera posició de la matriu a la pantalla.
-
+; 19
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 showCursor proc
     push ebp
 	mov  ebp, esp
 	;Inici Codi de la pràctica: aquí heu d'escriure el vostre codi
 
+;            rowScreen=rowScreenIni-2
+	mov eax, rowScreenIni
+	sub eax, 2
+	mov rowScreen, eax
+	
+;            colScreen=colScreenIni+(colCursor*4)
+  	mov eax, 0
+  	mov al, colCursor
+	shr eax, 2
+	add eax, colScreenIni
+	mov colScreen, eax
 
-
-
+	call gotoxy 
 
 	;Fi Codi de la pràctica
 	mov esp, ebp

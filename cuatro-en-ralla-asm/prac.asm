@@ -156,7 +156,7 @@ getch endp
 ; Per calcular la posició del cursor a pantalla (rowScreen) i (colScreen)
 ; cal utilitzar aquestes fórmules:
 ;
-;            rowScreen=rowScreenIni-2
+;            rowScreen=rowScreenIni
 ;            colScreen=colScreenIni+(colCursor*4)
 ;
 ; Tenir en compte que colCursor és un caràcter (ascii) que s’ha de
@@ -168,26 +168,32 @@ getch endp
 ; colScreen : columna on volem posicionar el cursor a la pantalla.
 ; rowScreenIni : fila de la primera posició de la matriu a la pantalla.
 ; colScreenIni : columna de la primera posició de la matriu a la pantalla.
-; 19
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 showCursor proc
     push ebp
 	mov  ebp, esp
 	;Inici Codi de la pràctica: aquí heu d'escriure el vostre codi
 
-;            rowScreen=rowScreenIni-2
+	;rowScreen=rowScreenIni
 	mov eax, rowScreenIni
-	sub eax, 2
+	sub eax, 1
 	mov rowScreen, eax
 	
-;            colScreen=colScreenIni+(colCursor*4)
-  	mov eax, 0
-  	mov al, colCursor
-	shr eax, 2
+	;colScreen=colScreenIni+(colCursor*4)
+	mov eax, 0 
+	mov al, colCursor
+	;Si restem 10 tindrem el valor de la columna per index (A = 0, B = 1...)
+	sub al, 'A' 
+	;Multipliquem per 4 (2^2=4)
+	shl eax, 2
+	;Sumem colScreenIni
 	add eax, colScreenIni
+	;Restem un offset perque surti a la columna correcta
+	sub eax, 1
 	mov colScreen, eax
 
-	call gotoxy 
+	call gotoxy
 
 	;Fi Codi de la pràctica
 	mov esp, ebp
@@ -205,7 +211,7 @@ showCursor endp
 ; Cal cridar a la subrutina gotoxy per a posicionar el cursor 
 ; i a la subrutina printch per a mostrar el caràcter.
 ; La subrutina printch mostra per pantalla el caràcter emmagatzemat
-; al registre dil.
+; a la variable carac.
 ;
 ; Variables utilitzades:
 ; rowScreen : fila on volem posicionar el cursor a la pantalla.

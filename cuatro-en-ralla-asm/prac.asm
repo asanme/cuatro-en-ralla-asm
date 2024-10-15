@@ -302,11 +302,9 @@ showBoard proc
 			call gotoxy
 
 			; Guardamos el valor actual de la matriz en carac y lo mostramos
-			mov eax, 0
-			; Problema -> currentRow es un int (4 bytes), hay entonces que dividirlo entre 4 para encontrar la posicion en mBoard
 			mov eax, [currentRow]
 			add al, currentColumn
-			; Equivalente a mBoard[eax + currentColumn]
+			; Equivalente a mBoard[currentColumn + currentColumn]
 			mov al, mBoard[eax] 
 			mov carac, al
 			call printch

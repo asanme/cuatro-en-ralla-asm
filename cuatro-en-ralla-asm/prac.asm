@@ -354,20 +354,50 @@ showBoard endp
 ; colCursor: Variable que indica l columna en la que es troba el cursor
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 moveCursor proc
-   push ebp
-   mov  ebp, esp 
-
+	push ebp
+	mov  ebp, esp 
 	;Inici Codi de la pr�ctica: aqu� heu d'escriure el vostre codi
 
+	; NOTA -> ebx representa lo que hara el programa
+	; el valor de ebx afectara en la suma final de la columna
+	; -1 -> se mueve a la izquierda
+	; 0 -> no hace nada
+	; 1 -> se mueve a la derecha
 
+	; Comprueba que se haya presionado uno de los siguientes: q, j, k, ' '
+	checkForValidKey:
+		call getch
 
+		mov ebx, 0
+		cmp tecla, 'q'
+		je validKeyWasPressed 
+		cmp tecla, ' '
+		je validKeyWasPressed 
 
+		mov ebx, -1
+		cmp tecla, 'j'
+		je validKeyWasPressed 
+
+		mov ebx, 1
+		cmp tecla, 'k'
+		je validKeyWasPressed 
+
+		jmp checkForValidKey
+	
+	validKeyWasPressed:	
+		mov eax, 0
+		; Con esto conseguimos el numero de columna
+		mov al, [colCursor]
+		sub al, 'A'
+	
+		add eax, ebx		
+
+		call gotoxy
 
 	;Fi Codi de la pr�ctica
-
-   mov esp, ebp
-   pop ebp
-   ret
+	mov esp, ebp
+	pop ebp
+	ret
 
 moveCursor endp
 

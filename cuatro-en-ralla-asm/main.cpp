@@ -215,7 +215,7 @@ int main(void)
 			showBoard();
 		//Escriu el valor de cada casella, enmagatzemat a mBoard, en la posició corresponent de pantalla
 
-			//gotoxy_C(30, 12); //Situar el cursor a sota del tauler
+			gotoxy_C(30, 12); //Situar el cursor a sota del tauler
 			printf("Press any key ");
 			getch_C();
 			break;

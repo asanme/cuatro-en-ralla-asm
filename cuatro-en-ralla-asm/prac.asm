@@ -17,8 +17,8 @@ extern C carac: BYTE, tecla: BYTE, colCursor: BYTE, player: DWORD, mBoard: BYTE,
 
 ;Variables
 .data 
-	current_row dd 8 
-	current_column db 'A'
+	currentRow dd 8 
+	currentColumn db 'A'
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Les subrutines que heu de modificar per la pr�ctica nivell b�sic son:
@@ -267,26 +267,63 @@ showBoard proc
 	;Inici Codi de la pr�ctica: aqu� heu d'escriure el vostre codi
 	; NOTA: Hay que iterar por todas las filas y columnas (offset) y escribir por pantalla el contenido de mBoard
 
-	; rowScreen=RowScreenIni+(fila*2)+4
+	; Iniciamos las variables con los valores por defecto 
+	; currentRow -> fila actual
+	; currentColumn -> columna actual
 	mov eax, [row]
-	mov [current_row], eax
-	shl eax, 1
-	add eax, rowScreenIni
-	add eax, 4
-	mov [rowScreen], eax
-
-	; colScreen=ColScreenIni+(col*4)-1
-	mov eax, 0
+	mov [currentRow], eax
 	mov al, [col]
-	shl eax, 2
-	add eax, colScreenIni
-	sub eax, 1
-	mov [colScreen], eax
+	mov [currentColumn], al
+		
+	rowIterator:
+		cmp [currentRow], 20
+		jg endRowIterator 
 
-	;mov al, mBoard[8] ;esta funcion accede a la primera posici�n de la matriz (cada posicion es un offset de 8)
-	;mov carac, mBoard[posicion] ;guardaremos el valor actual de la matriz en carac y lo pondremos en pantalla
-	call gotoxy
-	call printch 
+		columnIterator:
+			cmp [currentColumn], 6 
+			jg endColumnIterator
+
+			; rowScreen=RowScreenIni+(fila*2)+4
+			mov eax, [currentRow]
+			shl eax, 1
+			add eax, rowScreenIni
+			add eax, 4
+			mov [rowScreen], eax
+
+			; colScreen=ColScreenIni+(col*4)-1
+			mov eax, 0
+			mov al, [currentColumn]
+			shl eax, 2
+			add eax, colScreenIni
+			sub eax, 1
+			mov [colScreen], eax
+
+			; Con esto posicionamos el cursor en la parte de la matriz que queremos
+			call gotoxy
+
+			; Guardamos el valor actual de la matriz en carac y lo mostramos
+			mov eax, 0
+			; Problema -> currentRow es un int (4 bytes), hay entonces que dividirlo entre 4 para encontrar la posicion en mBoard
+			mov eax, [currentRow]
+			shr eax, 2
+			add al, currentColumn
+			; Equivalente a mBoard[eax + currentColumn]
+			mov al, mBoard[eax] 
+			mov carac, al
+			call printch
+
+			;Pasamos a la siguiente columna
+			inc [currentColumn]
+			jmp columnIterator
+
+		endColumnIterator:
+			;Pasamos a la siguiente fila
+			mov [currentColumn], 0
+			add [currentRow], 4
+			jmp rowIterator
+
+	endRowIterator:
+	; Aqui termina la iteracion de la matriz
 
 	;Fi Codi de la pr�ctica
 	mov esp, ebp

@@ -228,9 +228,18 @@ showPlayer proc
 	mov  ebp, esp
 	;Inici Codi de la pr�ctica: aqu� heu d'escriure el vostre codi
 
+	mov [rowScreen], 23
+	; Offset de -1 porque la columna no esta en su sitio
+	mov [colScreen], 18
+	call gotoxy
 
-
-
+	mov eax, player 
+	;shr eax, 2 
+	add eax, '0'
+	;otra alternativa equivalente
+	;add eax, 48
+	mov carac, al
+	call printch
 
 	;Fi Codi de la pr�ctica
 	mov esp, ebp

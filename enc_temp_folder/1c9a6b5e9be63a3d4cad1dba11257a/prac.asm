@@ -266,6 +266,7 @@ showBoard proc
 	mov  ebp, esp
 	;Inici Codi de la pr�ctica: aqu� heu d'escriure el vostre codi
 	; NOTA: Hay que iterar por todas las filas y columnas (offset) y escribir por pantalla el contenido de mBoard
+		
 
 	; rowScreen=RowScreenIni+(fila*2)+4
 	mov eax, [row]

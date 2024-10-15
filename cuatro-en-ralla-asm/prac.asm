@@ -276,7 +276,7 @@ showBoard proc
 	mov [currentColumn], al
 		
 	rowIterator:
-		cmp [currentRow], 20
+		cmp [currentRow], 5
 		jg endRowIterator 
 
 		columnIterator:
@@ -305,7 +305,6 @@ showBoard proc
 			mov eax, 0
 			; Problema -> currentRow es un int (4 bytes), hay entonces que dividirlo entre 4 para encontrar la posicion en mBoard
 			mov eax, [currentRow]
-			shr eax, 2
 			add al, currentColumn
 			; Equivalente a mBoard[eax + currentColumn]
 			mov al, mBoard[eax] 
@@ -319,7 +318,7 @@ showBoard proc
 		endColumnIterator:
 			;Pasamos a la siguiente fila
 			mov [currentColumn], 0
-			add [currentRow], 4
+			inc [currentRow]
 			jmp rowIterator
 
 	endRowIterator:

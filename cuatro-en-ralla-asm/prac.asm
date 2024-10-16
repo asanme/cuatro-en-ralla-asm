@@ -386,12 +386,34 @@ moveCursor proc
 	
 	validKeyWasPressed:	
 		mov eax, 0
+		mov ecx, 0
+		mov ecx, ebx
+
 		; Con esto conseguimos el numero de columna
 		mov al, [colCursor]
 		sub al, 'A'
-	
-		add eax, ebx		
+		shl eax, 2
+		add eax, [colScreenIni]
 
+		; Con esto encontramos la proxima columna a la que deberemos movernos
+		shl ebx, 2
+		add eax, ebx		
+		sub eax, 1		
+	
+		; Hay que comprobar que el valor actual este dentro del rango de valores validos
+		; En este caso, tiene que ser un valor entre 8 y 32, incluidos
+		cmp eax, 8
+		jl isOutOfRange
+		cmp eax, 32
+		jg isOutOfRange
+
+		; Solo almacenamos el valor si esta dentro del rango [8, 32]
+		mov [colScreen], eax
+
+		; Calculamos la siguiente columna
+		add [colCursor], cl
+
+	isOutOfRange:
 		call gotoxy
 
 	;Fi Codi de la pr�ctica

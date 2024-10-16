@@ -361,18 +361,16 @@ moveCursor proc
 	; NOTA -> ebx representa lo que hara el programa
 	; el valor de ebx afectara en la suma final de la columna
 	; -1 -> se mueve a la izquierda
-	; 0 -> no hace nada
 	; 1 -> se mueve a la derecha
 
 	; Comprueba que se haya presionado uno de los siguientes: q, j, k, ' '
 	checkForValidKey:
 		call getch
 
-		mov ebx, 0
 		cmp tecla, 'q'
-		je validKeyWasPressed 
+		je finishMoving
 		cmp tecla, ' '
-		je validKeyWasPressed 
+		je finishMoving
 
 		mov ebx, -1
 		cmp tecla, 'j'
@@ -401,11 +399,11 @@ moveCursor proc
 		sub eax, 1		
 	
 		; Hay que comprobar que el valor actual este dentro del rango de valores validos
-		; En este caso, tiene que ser un valor entre 8 y 32, incluidos
-		cmp eax, 8
-		jl isOutOfRange
-		cmp eax, 32
-		jg isOutOfRange
+		; En este caso, tiene que ser un valor entre 7 y 31, incluidos (es 7 y 31 por el offset de 1)
+		cmp eax, 7
+		jl finishMoving
+		cmp eax, 31
+		jg finishMoving
 
 		; Solo almacenamos el valor si esta dentro del rango [8, 32]
 		mov [colScreen], eax
@@ -413,8 +411,9 @@ moveCursor proc
 		; Calculamos la siguiente columna
 		add [colCursor], cl
 
-	isOutOfRange:
 		call gotoxy
+
+	finishMoving:
 
 	;Fi Codi de la pr�ctica
 	mov esp, ebp
@@ -441,10 +440,19 @@ moveCursorContinuous proc
 
 	;Inici Codi de la pr�ctica: aqu� heu d'escriure el vostre codi
 
+	checkForExit:
+		call moveCursor
 
+		cmp tecla, 'q'
+		je exit
+		
+		cmp tecla, ' '
+		je exit
 
+		jmp checkForExit
 
-
+	exit:
+		
 	;Fi Codi de la pr�ctica
 
 	mov esp, ebp

@@ -18,7 +18,7 @@ extern C carac: BYTE, tecla: BYTE, colCursor: BYTE, player: DWORD, mBoard: BYTE,
 ;Variables
 .data 
 	currentRow dd 8 
-	currentColumn db 'A'
+	currentColumn dd 'A'
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Les subrutines que heu de modificar per la pr�ctica nivell b�sic son:
@@ -279,10 +279,15 @@ showBoard proc
 	; Iniciamos las variables con los valores por defecto 
 	; currentRow -> fila actual
 	; currentColumn -> columna actual
+
+	; Guardamos fila
 	mov eax, [row]
 	mov [currentRow], eax
+
+	; Guardamos columna
+	mov eax, 0 
 	mov al, [col]
-	mov [currentColumn], al
+	mov [currentColumn], eax
 		
 	rowIterator:
 		cmp [currentRow], 5
@@ -293,6 +298,7 @@ showBoard proc
 			jg endColumnIterator
 
 			; rowScreen=RowScreenIni+(fila*2)+4
+			mov eax, 0
 			mov eax, [currentRow]
 			shl eax, 1
 			add eax, rowScreenIni
@@ -301,7 +307,7 @@ showBoard proc
 
 			; colScreen=ColScreenIni+(col*4)-1
 			mov eax, 0
-			mov al, [currentColumn]
+			mov eax, [currentColumn]
 			shl eax, 2
 			add eax, colScreenIni
 			sub eax, 1
@@ -310,12 +316,12 @@ showBoard proc
 			; Con esto posicionamos el cursor en la parte de la matriz que queremos
 			call gotoxy
 
-			; Guardamos el valor actual de la matriz en carac y lo mostramos
-			mov eax, [currentRow]
-			add al, currentColumn
-			; Equivalente a mBoard[currentColumn + currentColumn]
-			mov al, mBoard[eax] 
-			mov carac, al
+			; Calculamos el proximo indice (se almacena en eax)
+			call calcIndex
+
+			; Equivalente a mBoard[currentRow][currentColumn]
+			mov al, [mBoard + eax] 
+			mov [carac], al
 			call printch
 
 			;Pasamos a la siguiente columna
@@ -480,9 +486,11 @@ calcIndex proc
 
 	;Inici Codi de la pr�ctica: aqu� heu d'escriure el vostre codi
 
-
-
-
+	; on pos = (row*7 + col (convertida a n�mero)).
+	; Guardamos el valor actual de la matriz en carac y lo mostramos
+	mov eax, [currentRow]
+	imul eax, 7
+	add eax, [currentColumn]
 
 	;Fi Codi de la pr�ctica
 
@@ -519,8 +527,7 @@ putPiece proc
 
 	;Inici Codi de la pr�ctica: aqu� heu d'escriure el vostre codi
 
-
-
+	call moveCursorContinous
 
 
 	;Fi Codi de la pr�ctica

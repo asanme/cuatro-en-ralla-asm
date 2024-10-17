@@ -246,7 +246,7 @@ int main(void)
 			printf(" Press j, k, <space> or <Quit> ");
 			colCursor = 'D'; //Columna inicial on volem que aparegui el cursor 'D'
 
-			showCursor(); // Se han olvidado posicionar el cursor donde toca antes de hacer nada...
+			// showCursor(); // Se han olvidado posicionar el cursor donde toca antes de hacer nada...
 			moveCursorContinuous(); //Subrutina que implementa el moviment continu
 
 			gotoxy_C(30, 2); //Situar el cursor a sota del tauler

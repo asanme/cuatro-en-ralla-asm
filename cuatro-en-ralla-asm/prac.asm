@@ -194,7 +194,7 @@ showCursor proc
 	;Sumem colScreenIni
 	add eax, [colScreenIni]
 	;Restem un offset perque surti a la columna correcta
-	sub eax, 1
+	; sub eax, 1
 	mov [colScreen], eax
 
 	call gotoxy
@@ -230,7 +230,7 @@ showPlayer proc
 
 	mov [rowScreen], 23
 	; Offset de -1 porque la columna no esta en su sitio
-	mov [colScreen], 18
+	mov [colScreen], 19
 	call gotoxy
 
 	mov eax, player 
@@ -281,12 +281,11 @@ showBoard proc
 	; currentColumn -> columna actual
 
 	; Guardamos fila
-	mov eax, [row]
+	mov eax, 0
 	mov [currentRow], eax
 
 	; Guardamos columna
 	mov eax, 0 
-	mov al, [col]
 	mov [currentColumn], eax
 		
 	rowIterator:
@@ -402,20 +401,23 @@ moveCursor proc
 		; Con esto encontramos la proxima columna a la que deberemos movernos
 		shl ebx, 2
 		add eax, ebx		
-		sub eax, 1		
+		; sub eax, 1		
 	
 		; Hay que comprobar que el valor actual este dentro del rango de valores validos
 		; En este caso, tiene que ser un valor entre 7 y 31, incluidos (es 7 y 31 por el offset de 1)
 		cmp eax, 7
 		jl finishMoving
-		cmp eax, 31
+		cmp eax, 32
 		jg finishMoving
 
 		; Solo almacenamos el valor si esta dentro del rango [8, 32]
 		mov [colScreen], eax
+		shr eax, 2
+		mov [currentColumn], eax
 
 		; Calculamos la siguiente columna
 		add [colCursor], cl
+
 
 		call gotoxy
 
@@ -445,6 +447,7 @@ moveCursorContinuous proc
 	mov  ebp, esp
 
 	;Inici Codi de la pr�ctica: aqu� heu d'escriure el vostre codi
+	call showCursor
 
 	checkForExit:
 		call moveCursor
@@ -526,10 +529,29 @@ putPiece proc
 	mov  ebp, esp
 
 	;Inici Codi de la pr�ctica: aqu� heu d'escriure el vostre codi
+	call showBoard
+	call showCursor
 
-	call moveCursorContinous
+	startGame:
+		call moveCursorContinuous 
+		cmp tecla, ' '
+		je putPieceBranch
+
+		jmp startGame
+
+	putPieceBranch:
+		; Hay que iterar desde la fila de abajo e ir subiendo
+		; mov [mBoard + 6 + 35], 'A'
+
+		; Guardamos fila
+		mov [currentRow], 5
+
+		; Guardamos columna
+		mov eax, 0 
+		mov [currentColumn], eax
 
 
+	call showBoard
 	;Fi Codi de la pr�ctica
 
 	mov esp, ebp

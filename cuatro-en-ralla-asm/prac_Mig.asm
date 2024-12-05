@@ -543,9 +543,8 @@ putPiece proc
 	call showBoard
 	call showPlayer
 
-	mov al, 'D' 
+	mov al, [colCursor]
 	mov [col], al
-	mov [colCursor], al
 
 	call showCursor
 
@@ -647,7 +646,7 @@ Play proc
 	push ebp
 	mov  ebp, esp
 	;Inici Codi de la pràctica: aquí heu d'escriure el vostre codi
-
+	mov [tecla], ' '
 	bucleJuego:
 		cmp [tecla], 'q'
 		je final
